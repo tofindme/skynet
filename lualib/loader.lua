@@ -62,28 +62,21 @@ table.insert(package.searchers, 2, p_lua_loader)
 
 local function pp_loadfile(filename)
     local tf = io.open(filename, 'rb')
-    if not tf then
-        return nil, 'cannot open ' .. filename
-    end
-    tf:close()
+    if tf then
+        tf:close()
 
-    local new_filename, n = filename:gsub('(%.p%.lua)$', '.pp.lua')
-    if n == 0 then
-        new_filename, n = filename:gsub('(%.lua)$', '.pp.lua')
-        if n == 0 then
+        local ppf, n = filename:gsub('(%.p%.lua)$', '.pp.lua')
+        assert(n == 1)
+        local pf = io.open(ppf, 'wb')
+        if pf then
+            local of = io.popen(gcc_preprocess_cmd .. filename, 'r')
+            pf:write(of:read('a'))
+            of:close()
+            pf:close()
+            return loadfile(ppf)
+        else
             return loadfile(filename)
         end
-    end
-
-    local pf = io.open(new_filename, 'wb')
-    if pf then
-        local of = io.popen(gcc_preprocess_cmd .. filename, 'r')
-        pf:write(of:read('a'))
-        of:close()
-        pf:close()
-        return loadfile(new_filename)
-    else
-        return loadfile(filename)
     end
 end
 
