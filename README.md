@@ -1,11 +1,3 @@
-## 说明
-
-sf分支是项目所使用的，不向skynet master分支提交。
-
-如果有需要提交的内容，可以在创建其他分支向cloudwu/skynet发pull request
-
-master分支与上游同步更新，我们不向这个分支提交。
-
 ## Build
 
 For Linux, install autoconf first for jemalloc:
