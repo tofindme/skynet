@@ -26,6 +26,7 @@ local skynet = {
 	PTYPE_DEBUG = 9,
 	PTYPE_LUA = 10,
 	PTYPE_SNAX = 11,
+	PTYPE_USER = 16,
 }
 
 -- code cache
