@@ -70,18 +70,28 @@ end
 local CMD = {}
 
 function CMD.forward(source, fd, client, address)
-	local c = assert(connection[fd])
-	unforward(c)
-	c.client = client or 0
-	c.agent = address or source
-	forwarding[c.agent] = c
-	gateserver.openclient(fd)
+  local c = connection[fd]
+  if c then
+    unforward(c)
+    c.client = client or 0
+    c.agent = address or source
+    forwarding[c.agent] = c
+    gateserver.openclient(fd)
+    return true
+  else
+    return false
+  end
 end
 
 function CMD.accept(source, fd)
-	local c = assert(connection[fd])
-	unforward(c)
-	gateserver.openclient(fd)
+  local c = connection[fd]
+  if c then
+    unforward(c)
+    gateserver.openclient(fd)
+    return true
+  else
+    return false
+  end
 end
 
 function CMD.kick(source, fd)
