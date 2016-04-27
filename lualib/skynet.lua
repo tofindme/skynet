@@ -344,12 +344,7 @@ function skynet.exit()
 end
 
 function skynet.getenv(key)
-	local ret = c.command("GETENV",key)
-	if ret == "" then
-		return
-	else
-		return ret
-	end
+	return (c.command("GETENV",key))
 end
 
 function skynet.setenv(key, value)
@@ -622,14 +617,14 @@ local function ret(f, ...)
 	return ...
 end
 
-local function init_template(start)
+local function init_template(start, ...)
 	init_all()
 	init_func = {}
-	return ret(init_all, start())
+	return ret(init_all, start(...))
 end
 
-function skynet.pcall(start)
-	return xpcall(init_template, debug.traceback, start)
+function skynet.pcall(start, ...)
+	return xpcall(init_template, debug.traceback, start, ...)
 end
 
 function skynet.init_service(start)
