@@ -552,14 +552,8 @@ end
 function skynet.error(...)
 	local ti, tf = math.modf(skynet.time())
 	tf = math.floor(tf * 1000)
-	local fmt = '[%s-%03d ms] <%s>'
-	local t = {
-		fmt:format(os.date('%T', ti), tf, SERVICE_NAME), ...
-	}
-	for i=2,#t do
-		t[i] = tostring(t[i])
-	end
-	return c.error(table.concat(t, " "))
+	local t = ('[%s-%03d ms] <%s>'):format(os.date('%T', ti), tf, SERVICE_NAME)
+	return c.error(t, ...)
 end
 
 ----- register protocol
@@ -666,6 +660,11 @@ end
 
 function skynet.term(service)
 	return _error_dispatch(0, service)
+end
+
+function skynet.memlimit(bytes)
+	debug.getregistry().memlimit = bytes
+	skynet.memlimit = nil	-- set only once
 end
 
 local function clear_pool()
