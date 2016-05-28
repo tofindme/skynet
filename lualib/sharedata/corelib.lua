@@ -96,6 +96,14 @@ function meta:__index(key)
 	end
 end
 
+function meta:__newindex(k, v)
+  if k:sub(1, 2) == "__" then
+    rawset(self, k, v)
+  else
+    error("Attempt to update read-only table", 2)
+  end
+end
+
 function meta:__len()
 	return len(getcobj(self))
 end
