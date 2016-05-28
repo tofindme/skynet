@@ -96,6 +96,10 @@ function meta:__index(key)
 	end
 end
 
+function meta:__newindex(k, v)
+  error("attempt to update a read-only table", 2)
+end
+
 function meta:__len()
 	return len(getcobj(self))
 end
