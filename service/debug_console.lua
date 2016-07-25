@@ -292,3 +292,7 @@ function COMMAND.ping(fd, address)
 	ti = skynet.now() - ti
 	return tostring(ti)
 end
+
+function COMMAND.stopLobby(fd)
+  skynet.call(".lobyy", "lua", "stopLobby")
+end
