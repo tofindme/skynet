@@ -134,6 +134,7 @@ function COMMAND.help()
 		cmem = "Show C memory info",
 		shrtbl = "Show shared short string table info",
 		ping = "ping address",
+		stopLobby = "stop the lobby to save cache",
 	}
 end
 
