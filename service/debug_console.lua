@@ -295,5 +295,5 @@ function COMMAND.ping(fd, address)
 end
 
 function COMMAND.stopLobby(fd)
-  skynet.call(".lobyy", "lua", "stopLobby")
+  skynet.call(".lobby", "lua", "stopLobby")
 end
