@@ -76,9 +76,12 @@ logger_cb(struct skynet_context * context, void *ud, int type, int session, uint
     struct logger * inst = ud;
     switch (type) {
         case PTYPE_SYSTEM:
+            update_file_name(inst);
+            // w to a?  why?
+            /*
             if (inst->filename) {
                 inst->handle = freopen(inst->filename, "a", inst->handle);
-            }
+            }*/
             break;
         case PTYPE_TEXT:
             struct logger * inst = (struct logger*)ud;
