@@ -84,7 +84,6 @@ logger_cb(struct skynet_context * context, void *ud, int type, int session, uint
             }*/
             break;
         case PTYPE_TEXT:
-            struct logger * inst = (struct logger*)ud;
             update_file_name(inst);
             size_t len = 0;
             len = fprintf(inst->handle, "[:%08x] ", source);
@@ -183,6 +182,10 @@ int update_file_name(struct logger * inst)
         return 0;
     }
 
+    if (stdout == inst->handle) {
+      return 0;
+    }
+
     if(inst->handle != NULL)
     {
         fflush(inst->handle);
@@ -209,7 +212,6 @@ logger_init(struct logger * inst, struct skynet_context *ctx, const char * parm)
            strncpy(inst->log_prefix, base+1, strlen(base)-1);
         }
         strncpy(inst->log_dir, dir, strlen(dir));
-        strncpy(inst->log_dir, "./log", 5);
         update_file_name(inst);
     }
     else
