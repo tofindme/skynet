@@ -72,16 +72,25 @@ logger_release(struct logger * inst) {
 }
 
 static int
-_logger(struct skynet_context * context, void *ud, int type, int session, uint32_t source, const void * msg, size_t sz) {
-    struct logger * inst = (struct logger*)ud;
-    update_file_name(inst);
-    size_t len = 0;
-    len = fprintf(inst->handle, "[:%08x] ", source);
-    fwrite(msg, sz , 1, inst->handle);
-    fprintf(inst->handle, "\n");
-    fflush(inst->handle);
-
-    inst->writen_bytes = inst->writen_bytes + len + sz + 1;
+logger_cb(struct skynet_context * context, void *ud, int type, int session, uint32_t source, const void * msg, size_t sz) {
+    struct logger * inst = ud;
+    switch (type) {
+        case PTYPE_SYSTEM:
+            if (inst->filename) {
+                inst->handle = freopen(inst->filename, "a", inst->handle);
+            }
+            break;
+        case PTYPE_TEXT:
+            struct logger * inst = (struct logger*)ud;
+            update_file_name(inst);
+            size_t len = 0;
+            len = fprintf(inst->handle, "[:%08x] ", source);
+            fwrite(msg, sz , 1, inst->handle);
+            fprintf(inst->handle, "\n");
+            fflush(inst->handle);
+            inst->writen_bytes = inst->writen_bytes + len + sz + 1;
+            break;
+    }
     return 0;
 }
 
@@ -206,7 +215,7 @@ logger_init(struct logger * inst, struct skynet_context *ctx, const char * parm)
     }
 
     if (inst->handle) {
-        skynet_callback(ctx, inst, _logger);
+        skynet_callback(ctx, inst, logger_cb);
         skynet_command(ctx, "REG", ".logger");
         return 0;
     }
